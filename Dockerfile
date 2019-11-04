@@ -1,4 +1,4 @@
-FROM python:3.5.8-alpine
+FROM python:latest
 
 RUN pip3 install pillow
 

@@ -3,21 +3,24 @@ import getopt
 import os
 import platform
 import time
+import logging
 
 from PIL import Image
 from PIL.ExifTags import TAGS
 
-maxImgFileSizeKb = os.getenv('MAX_IMG_FILE_SIZE', 1500)
-quality = os.getenv('QUALITY', 90)
-divideSize = os.getenv('DIVIDE_SIZE', 90)
+maxImgFileSizeKb = int(os.getenv('MAX_IMG_FILE_SIZE', 1500))
+quality = int(os.getenv('QUALITY', 90))
+divideSize = int(os.getenv('DIVIDE_SIZE', 90))
 folderToProcess = os.getenv('FOLDER', './img/')
-sleepTime = os.getenv('SLEEP', 60)
+sleepTime = int(os.getenv('SLEEP', 60))
+log = None
 
 def main():
-	while True:
-	    findandresize(folderToProcess, maxImgFileSizeKb)
-	    print("Sleeping {}".format(sleepTime))
-	    time.sleep(sleepTime)
+    while True:
+        log.info('Start resizing images in {}'.format(folderToProcess))
+        findandresize(folderToProcess, maxImgFileSizeKb)
+        log.info("Sleeping {}".format(sleepTime))
+        time.sleep(sleepTime)
 
 def findandresize(dir='.', maxImgFileSizeKb=1500):
     files = []
@@ -43,7 +46,7 @@ def process_image(filePath, fileSizeKb, counter):
     # print_exif(exif)
     resize_image(filePath, img, divideSize, quality)
     newFileSizeKb=int(os.path.getsize(filePath)/1024)
-    print("[{} kB - {} kB] {} {}".format(fileSizeKb, newFileSizeKb, date, filePath.lower()))
+    log.info("[{} kB - {} kB] {} {}".format(fileSizeKb, newFileSizeKb, date, filePath.lower()))
 
 def resize_image(filePath, img, divideSize, quality):
     exif_bin = img.info['exif']
@@ -58,7 +61,7 @@ def get_exif_field(exif,field):
 
 def print_exif(exif):
   for (k,v) in exif.items():
-     print("{}: {}".format(TAGS.get(k), v))
+     log.info("{}: {}".format(TAGS.get(k), v))
 
 def get_creation_date(path_to_file):
     """
@@ -77,5 +80,19 @@ def get_creation_date(path_to_file):
             # so we'll settle for when its content was last modified.
             return stat.st_mtime
 
+def get_module_logger(mod_name):
+    """
+    To use this, do logger = get_module_logger(__name__)
+    """
+    logger = logging.getLogger(mod_name)
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter(
+        '%(asctime)s [%(name)-12s] %(levelname)-8s %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.DEBUG)
+    return logger
+
 if __name__ == "__main__":
+    log = get_module_logger(__name__)
     main()
