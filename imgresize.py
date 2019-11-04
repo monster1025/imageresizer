@@ -50,7 +50,8 @@ def process_image(filePath, fileSizeKb, counter):
     log.info("[{} kB - {} kB] {}".format(fileSizeKb, newFileSizeKb, filePath))
 
 def rename_file(filePath, counter):
-    newFilePath = filePath.lower()
+    dir, file=os.path.split(filePath)
+    newFilePath=os.path.join(dir, file.lower())
     os.rename(filePath, newFilePath)
     return newFilePath
 
