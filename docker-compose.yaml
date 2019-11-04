@@ -1,0 +1,9 @@
+imageresizer:
+  build: .
+  #image: monster1025/imageresizer
+  container_name: imageresizer
+  restart: always
+  volumes: 
+    - "./img:/img"
+  environment:
+    - NODE_ENV=production
