@@ -49,7 +49,9 @@ def process_image(filePath, fileSizeKb, counter):
     log.info("[{} kB - {} kB] {}".format(fileSizeKb, newFileSizeKb, filePath.lower()))
 
 def resize_image(filePath, img, divideSize, quality):
-    exif_bin = img.info['exif']
+    exif_bin = None
+    if 'exif' in img.info:
+      exif_bin = img.info['exif']
     width, height = img.size
     img = img.resize((int(width / 100 * divideSize),int(height / 100 * divideSize)),Image.ANTIALIAS)
     img.save(filePath, exif=exif_bin, quality=quality)
