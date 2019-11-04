@@ -32,7 +32,10 @@ def findandresize(dir='.', maxImgFileSizeKb=1500):
                 filePath=os.path.join(r, file)
                 fileSizeKb=int(os.path.getsize(filePath)/1024)
                 if (fileSizeKb>maxImgFileSizeKb):
-                    process_image(filePath, fileSizeKb, counter)
+                    try:
+                        process_image(filePath, fileSizeKb, counter)
+                    except Exception:
+                        log.error("Error processing {}".format(filePath))
                 counter=counter+1
 
 def process_image(filePath, fileSizeKb, counter):
