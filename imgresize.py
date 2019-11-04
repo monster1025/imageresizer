@@ -37,16 +37,16 @@ def findandresize(dir='.', maxImgFileSizeKb=1500):
 
 def process_image(filePath, fileSizeKb, counter):
     img = Image.open(filePath)
-    exif = img._getexif()
-    model=get_exif_field(exif, 'Model')
-    date=get_exif_field(exif, 'DateTime')
-    creation_date=get_creation_date(filePath)
-    if (date == None):
-        date=creation_date
+    # exif = img._getexif()
+    # model=get_exif_field(exif, 'Model')
+    # date=get_exif_field(exif, 'DateTime')
+    # creation_date=get_creation_date(filePath)
+    # if (date == None):
+    #     date=creation_date
     # print_exif(exif)
     resize_image(filePath, img, divideSize, quality)
     newFileSizeKb=int(os.path.getsize(filePath)/1024)
-    log.info("[{} kB - {} kB] {} {}".format(fileSizeKb, newFileSizeKb, date, filePath.lower()))
+    log.info("[{} kB - {} kB] {}".format(fileSizeKb, newFileSizeKb, filePath.lower()))
 
 def resize_image(filePath, img, divideSize, quality):
     exif_bin = img.info['exif']

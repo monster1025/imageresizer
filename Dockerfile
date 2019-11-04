@@ -1,7 +1,7 @@
-FROM python:latest
+FROM python:slim
 
 RUN pip3 install pillow
 
-COPY imgresize.py /imgresize.py
+ADD imgresize.py /imgresize.py
 
 CMD python3 imgresize.py
