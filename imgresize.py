@@ -45,8 +45,15 @@ def process_image(filePath, fileSizeKb, counter):
     #     date=creation_date
     # print_exif(exif)
     resize_image(filePath, img, divideSize, quality)
+    filePath = rename_file(filePath, counter)
     newFileSizeKb=int(os.path.getsize(filePath)/1024)
-    log.info("[{} kB - {} kB] {}".format(fileSizeKb, newFileSizeKb, filePath.lower()))
+    log.info("[{} kB - {} kB] {}".format(fileSizeKb, newFileSizeKb, filePath))
+
+def rename_file(filePath, counter):
+    newFilePath = filePath.lower()
+    os.rename(filePath, newFilePath)
+    return newFilePath
+
 
 def resize_image(filePath, img, divideSize, quality):
     exif_bin = None
